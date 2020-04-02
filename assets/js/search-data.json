@@ -2,10 +2,10 @@
   
     
         "post0": {
-            "title": "Title",
+            "title": "This is a test post with title",
             "content": "This is a test notebook . def hereissomecode() .",
-            "url": "https://pdito.github.io/blog/2020/04/01/first-test-notebook.html",
-            "relUrl": "/2020/04/01/first-test-notebook.html",
+            "url": "https://pdito.github.io/blog/deep%20learning/2020/04/01/first-test-notebook.html",
+            "relUrl": "/deep%20learning/2020/04/01/first-test-notebook.html",
             "date": " • Apr 1, 2020"
         }
         
