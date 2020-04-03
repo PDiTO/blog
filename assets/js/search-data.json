@@ -11,17 +11,6 @@
         
     
   
-    
-        ,"post1": {
-            "title": "Title",
-            "content": "from fastai2.vision.all import * from fastai2.vision.widgets import * . Pokemon Gen 1 Classifier . Use the below model to check who your Pokemon is! . path = Path() learn_inf = load_learner(path/&#39;pokemon.pkl&#39;) user_inst = widgets.Label(&#39;Upload your Pokemon - Gen 1 only please!&#39;) btn_upload = widgets.FileUpload() btn_classify = widgets.Button(description=&#39;Classify&#39;) img_user = widgets.Output() lbl_pred = widgets.Label() def on_click_classify(change): img = PILImage.create(btn_upload.data[-1]) img_user.clear_output() with img_user: display(img.to_thumb(128,128)) pred, pred_idx, probs = learn_inf.predict(img) lbl_pred.value = f&#39;Prediction: {pred}; Probability: {probs[pred_idx]*100:.02f}%.&#39; btn_classify.on_click(on_click_classify) display(VBox([user_inst,btn_upload,btn_classify,img_user,lbl_pred])) . (#1) [Path(&#39;export.pkl&#39;)] .",
-            "url": "https://pdito.github.io/blog/2020/04/02/pokemon-gen1-classifer-app.html",
-            "relUrl": "/2020/04/02/pokemon-gen1-classifer-app.html",
-            "date": " • Apr 2, 2020"
-        }
-        
-    
-  
 
   
   
