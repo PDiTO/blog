@@ -97,7 +97,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      8 min read
+      9 min read
     
 </span></p>
 
@@ -159,8 +159,7 @@ window.onload = wrap_img;
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="The-Project">The Project<a class="anchor-link" href="#The-Project"> </a></h3><p>In my <span style="color:red">initial blog post</span> I talked about why I decided to pursue deep learning more actively, and how I intended to reach my goals, one small step at a time.</p>
-<p>So, on that note following completion of week 2 of the fastai 2020 course, here is my first project, a Pokemon Gen 1 Classifier. My target is to achieve 90% accuracy metric. As I write, I have no idea how ambitious that is!</p>
+<h3 id="The-Project">The Project<a class="anchor-link" href="#The-Project"> </a></h3><p>Following completion of week 2 of the fastai 2020 course, here is my first project, a Pokemon Gen 1 Classifier. My target is to achieve 90% accuracy metric. As I write, I have no idea how ambitious that is.</p>
 
 </div>
 </div>
@@ -223,6 +222,7 @@ window.onload = wrap_img;
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="2.-The-Data-Model">2. The Data Model<a class="anchor-link" href="#2.-The-Data-Model"> </a></h3><p>There are many ways to get data into your deep learning environment. Kaggle offers a library, which I'll attempt to use in future, but for now, what I found most comfortable was to download the data to my local machine, inspect it, get to know it, zip it up and put that zip file on Dropbox. I was then able to share that file, and use wget {link} to import it to my deep learning environment.</p>
 <p>One point worth noting, is that when you share a Dropbox link, the end part always defaults to dl=0, you should change this to dl=1 for the wget command to work. I believe this option is only available to paid Dropbox accounts, so please bear that in mind too.</p>
+<p>You could also upload the .zip via Jupyter's upload function.</p>
 <p>After this step I manually unzipped the file. fast.ai has some nice convenience methods to download and untar data, but for now I don't believe the library has native support for zipped data.</p>
 <p>Below I set the path for my data.</p>
 
@@ -268,7 +268,7 @@ window.onload = wrap_img;
 <p>We can see the data is split into folders for each different Pokemon, but there is no training / validation split currently.</p>
 <p>Next I create my Datablock.</p>
 <p>I have two blocks, and ImageBlock and a CategoryBlock. The ImageBlock represents by independent variables, whilst the CategoryBlock represents the dependent value, in other words, my y or what i'm trying to predict.</p>
-<p>In order to get the items, I set this to get_image_files - which recursively polls a provided path to extract all the images. I'm actually not sure why we don't specify the path in the DataBlock, and instead call it later when we initialise the DataLoader. I guess the DataBlock is simply defining the structure and the DataLoader is actually initialising something with real data.</p>
+<p>In order to get the items, I set this to get_image_files - which recursively polls a provided path to extract all the images. I'm actually still not sure why we don't specify the path in the DataBlock, and instead call it later when we initialise the DataLoader. I guess the DataBlock is simply defining the structure and the DataLoader is actually initialising something with real data.</p>
 <p>Splitter determines my training / validation set split, i've chosen to make this 80% / 20% and set a seed so the validation set remains consistent as I iterate.</p>
 <p>I set my Category / dependent variable / y to parent_label, as my images are all in subfolders with the Pokemon name. This is super useful part of the fastai library, and I understand there are lots of different options available.</p>
 <p>Finally,  I transform all my images using a standard Resize. This makes the images 224x224, which should work well as i'm intending to use transfer learning from ResNet34, which was trained on images of this dimension.</p>
@@ -365,7 +365,8 @@ window.onload = wrap_img;
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>All looks good, so its time to define our architecture. In this case</p>
+<p>All looks good, so its time to define our architecture. In this case, i'm using the pre-trained resnet34 architecture as a starting point. I'll then run fastai's fine tune function (which is designed specifically for transfer learning) to repurpose the model to my requirements (by adding some additional layers to the head and retraining parts of the models with differing learning rates - we don't need to get into those details at this stage).</p>
+<p>I set the metric to accuracy, which I think is the best, human-intepretable output at this stage.</p>
 
 </div>
 </div>
@@ -474,7 +475,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Surprisingly, with almost no effort, I'm able to achieve over 93% accuracy on the validation set. This is particularly impressive given the structure of the input data. Images include the official animation images, pixelated gameboy images, plush toy images, hand-drawn images. Furthermore, many of the Pokemon in gen 1 have an extremely close likeness amongst their evolution tree.</p>
-<p>I had expected to have to fine tune the model and tidy up the input data to get anywhere near this result. Instead, in less than a minute and half of training, i've smashed my initial target.</p>
+<p>I had expected to have to fine tune the model and tidy up the input data to get anywhere near this result. Instead, in less than a minute and half of training, i've exceeded my initial target.</p>
 <p>This is a great indication of the power of transfer learning. I'm keen to revisit this model in future to see how I can improve the accuracy.</p>
 
 </div>
@@ -482,7 +483,7 @@ window.onload = wrap_img;
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Even though I am happy with the results, it's interesting to look at the items that the model is most incorrect on (in other words, from the classifications it got wrong, those which it has most confidence it got correct).</p>
+<p>Even though I am happy with the results, it's interesting to look at the items that the model is most incorrect on (in other words, from the set classifications it got incorrect, those which it had most confidence it got correct).</p>
 <p>Often these results are visualised in a confusion matrix, but we have too many classes here (151) so instead we just straight to the top losses.</p>
 
 </div>
@@ -564,6 +565,7 @@ Top Right: Mislabelled data! Our model is actually correct. This is Alakazam and
 Bottom Left: I feel like our model should have got this one, but admitedly the angle is strange.<br />
 Bottm Middle: It's unusual to see Marowak with fire, and the colour palette is far more attuned to Magmar.<br />
 Bottom Right: You can certainly see why the model would choose Gyarados. At a glance, I would do the same.</p>
+<p>Overall, there is nothing here that gives me particular concern.</p>
 
 </div>
 </div>
@@ -663,7 +665,7 @@ Bottom Right: You can certainly see why the model would choose Gyarados. At a gl
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>If getting good, labelled data is the hardest part of the problem, i'm told productionising your model comes a close second.</p>
-<p>I'm going to build this out into a separate notebook and use Voila and Binder to publish it on the web. Nethertheless, for completeness I'll provide all the detail below</p>
+<p>I'm going to build this out into a separate notebook and use Voila (to turn a notebook into an app) and Binder (to publish it on the web). Nethertheless, for completeness I'll provide all the detail below.</p>
 <p>First, let's export our trained model and confirm that the file exists after doing so.</p>
 
 </div>
@@ -706,7 +708,7 @@ Bottom Right: You can certainly see why the model would choose Gyarados. At a gl
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>I'm renaming the file in terminal from export.pkl to pokemon.pkl for my reference.</p>
+<p>I'm renaming the file in terminal from export.pkl to pokemon.pkl so I understand what it is...going forward it will be refered to as the latter.</p>
 <h4 id="Everything-below-this-point-will-form-the-basis-of-our-'Web-App'.">Everything below this point will form the basis of our 'Web App'.<a class="anchor-link" href="#Everything-below-this-point-will-form-the-basis-of-our-'Web-App'."> </a></h4><p>In Deep Learning, prediction is often refered to as inference. I'm going to load in my trained model for inference below.</p>
 
 </div>
@@ -772,7 +774,7 @@ Bottom Right: You can certainly see why the model would choose Gyarados. At a gl
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Seems good!</p>
-<p>First we create a label to guide the user. Next we create an Upload button so our user can submit their image. We then create a Classify button so the user to run the classification. Finally we create placeholders to display the uploaded image and the resulting classification.</p>
+<p>First we create a label to guide the user. Next we create an Upload button so our user can submit their image. We then create a Classify button so the user can run the classification. Finally we create placeholders to display the uploaded image and the resulting classification.</p>
 <p>After that we add an event handler to the Classify button to perform the necessary actions and populate the output placeholders on button click.</p>
 <p>Finally, we place all the UI elements into a vertical box (VBox) to keep the UI looking clean.</p>
 
@@ -808,18 +810,44 @@ Bottom Right: You can certainly see why the model would choose Gyarados. At a gl
 </div>
 </div>
 
-<div class="output_wrapper">
-<div class="output">
+</div>
+    
 
-<div class="output_area">
-
-
-<div class="output_html rendered_html output_subarea ">
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The final step now is to turn this notebook into a real app. First I create a new notebook containing solely the below code (a combination of the various cells above).</p>
 
 </div>
-
 </div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
 
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">()</span>
+<span class="n">learn_inf</span> <span class="o">=</span> <span class="n">load_learner</span><span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="s1">&#39;pokemon.pkl&#39;</span><span class="p">)</span>
+<span class="n">user_inst</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s1">&#39;Upload your Pokemon - Gen 1 only please!&#39;</span><span class="p">)</span>
+<span class="n">btn_upload</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">FileUpload</span><span class="p">()</span>
+<span class="n">btn_classify</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Classify&#39;</span><span class="p">)</span>
+<span class="n">img_user</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Output</span><span class="p">()</span>
+<span class="n">lbl_pred</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">on_click_classify</span><span class="p">(</span><span class="n">change</span><span class="p">):</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">PILImage</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">btn_upload</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">img_user</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">img_user</span><span class="p">:</span> <span class="n">display</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">to_thumb</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span><span class="mi">128</span><span class="p">))</span>
+    <span class="n">pred</span><span class="p">,</span> <span class="n">pred_idx</span><span class="p">,</span> <span class="n">probs</span> <span class="o">=</span> <span class="n">learn_inf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="n">lbl_pred</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Prediction: </span><span class="si">{</span><span class="n">pred</span><span class="si">}</span><span class="s1">; Probability: </span><span class="si">{</span><span class="n">probs</span><span class="p">[</span><span class="n">pred_idx</span><span class="p">]</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="s1">.02f</span><span class="si">}</span><span class="s1">%.&#39;</span>
+    
+<span class="n">btn_classify</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="n">on_click_classify</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">VBox</span><span class="p">([</span><span class="n">user_inst</span><span class="p">,</span><span class="n">btn_upload</span><span class="p">,</span><span class="n">btn_classify</span><span class="p">,</span><span class="n">img_user</span><span class="p">,</span><span class="n">lbl_pred</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
 </div>
 </div>
 
@@ -828,7 +856,51 @@ Bottom Right: You can certainly see why the model would choose Gyarados. At a gl
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The final step now is to turn this notebook into a real app. We will do this by using Voila and Binder.</p>
+<p>Next, I view the contents in Voila, which I've have already installed on my Deep Learning box. To do this I simply replace /notebooks/ in my url with /voila/render/ and bingo, I can see what my web app will look like.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Finally, I visit <a href="https://www.mybinder.org">Binder</a> to host my new Voila web app.</p>
+<p>You can see how I populated the required fields in the image below. Note:- make sure to change the dropdown to the left of the launch button to 'URL'.</p>
+<p>Additionally, my github username is PDiTO and my repository containing the notebook (in its root folder) is called apps.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><figure>
+  
+    <img class="docimage" src="/blog/images/copied_from_nb/../images/2020-04-03-pokemon-binder.png" alt="" />
+    
+    
+</figure>
+</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And here is the result with a real life test...</p>
+<p><figure>
+  
+    <img class="docimage" src="/blog/images/copied_from_nb/../images/2020-04-03-pokemon-binder-result.png" alt="" style="max-width: 300pxpx" />
+    
+    
+</figure>
+</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can view the app itself <a href="https://mybinder.org/v2/gh/PDiTO/apps/master?urlpath=%2Fvoila%2Frender%2Fpokemon-gen1-classifer-app.ipynb">here</a>. Enjoy :)</p>
+<p>Thanks for spending the time reading! Always happy to answer any questions.</p>
 
 </div>
 </div>
