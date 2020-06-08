@@ -1190,7 +1190,7 @@ Total non-trainable params: 21,267,648</p>
 <p>Something we haven't mentioned so far is the One Cycle training policy that is currently the preferred approach for training. This approach, again a discovery of Leslie Smith in his <a href="https://arxiv.org/abs/1803.09820">2018 paper</a>, has been adopted by the fastai framework.</p>
 <p>This basic principle is that we start off training with a low learning rate, increasing that rate in a linear fashion until we are around halfway through our epochs. From there, we reverse the direction gradually decreasing our learning rate, again, in a linear fashion. In addition, the final few epochs are often trained at an even lower learning rate.</p>
 <p>Typically we use the learning rate finder to determine our maximum rate, dividing that rate by 10 to get our minimum rate.</p>
-<p>We use <code>learn.fit_one_cycle()</code> passing or maximum learning rate using <code>lr_max</code>. From my experience the one cycle policy does make the training appear more volatile, however the end result is almost universally better.</p>
+<p>We use <code>learn.fit_one_cycle()</code> passing our maximum learning rate using <code>lr_max</code>. From my experience the one cycle policy does make the training appear more volatile, however the end result is almost universally better.</p>
 <p>For those who want a deeper dive, Sylvain Gugger has <a href="https://sgugger.github.io/the-1cycle-policy.html">an excellent post</a>.</p>
 
 </div>
@@ -1704,7 +1704,7 @@ Total non-trainable params: 21,267,648</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Until now, we've not really touched the data itself. The only transform we've made is resizing our images to 224x224 (cropping across the larger dimension). We may be able to get a model to generalise better (and hence perform better on our validation set) by including image normalisation and/or transformations.</p>
-<p>Below we initially resize our images 460x460, again cropping across the larger dimension. We then apply further images transforms by batch (which can be done on the GPU and hence is faster). We also normalise our images to ImageNet stats, which is the data set on which our architecture was pre-trained.</p>
+<p>Below we initially resize our images 460x460, again cropping across the larger dimension. We then apply further image transforms by batch (which can be done on the GPU and hence is faster). We also normalise our images to ImageNet stats, which is the dataset on which our architecture was pre-trained.</p>
 <p><code>aug_transforms</code> is a utility function that easily creates a list of transforms for us. By default, these include flip (horizontal, not vertical), rotate, zoom, warp and lighting transforms. We additionally add <code>min_scale</code> which tells <code>aug_transforms</code> to take a <a href="https://dev.fast.ai/vision.augment#RandomResizedCrop">RandomResizedCrop</a>.</p>
 <p>Let's see if it helps.</p>
 <p><em>Note: Batch transforms can only be performed on images of the same dimensions, which is why we use item transforms initially to resize the images.</em></p>
@@ -1883,7 +1883,7 @@ Total non-trainable params: 21,267,648</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>An interesting discovery recently is that its sometimes possible to train on lower resolution images to begin with, capturing those weights, and then re-train on more typically sized images (eg. 224x224) and achieve better accuracy.</p>
-<p>We tried this with our pets data set across hundreds of different combinations and was unable to get any noticeable improvement, in many cases it made it worse. We expect this is because our model is already performing so well, and a lot of the errors are those that humans would also make. We'll delve into this at little more at the end.</p>
+<p>We tried this with our pets data set across hundreds of different combinations and were unable to get any noticeable improvement, in many cases it made it worse. We expect this is because our model is already performing so well, and a lot of the errors are those that humans would also make.</p>
 
 </div>
 </div>
